@@ -46,6 +46,7 @@ public final class ListFactory {
 
     /** The test year. */
     private static final int TEST_YEAR = 2006;
+
     /**
      * Prevent instantiation.
      */

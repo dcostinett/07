@@ -33,9 +33,4 @@ public enum Skill implements Serializable {
     public int getRate() {
         return rate;
     }
-
-    @Override
-    public String toString() {
-        return name;
-    }
 }

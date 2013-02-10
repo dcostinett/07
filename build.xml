@@ -7,7 +7,7 @@
 <!-- build the zip file for submission.                                      -->
 <!-- The project name should be 01, 02, 03, etc.                             -->
 <!-- ======================================================================= -->
-<project name="06" default="jar" basedir=".">
+<project name="07" default="jar" basedir=".">
 
   <!-- ===================================================================== -->
   <!-- The following needs to be modified to match your name , it should     -->

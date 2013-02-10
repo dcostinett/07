@@ -255,7 +255,7 @@ public final class Invoice {
         }
 
         sb.append("\n");
-        sb.append(String.format("Total: %61d  %,10.2f", getTotalHours(), new Float(getTotalCharges()))).append("\n");
+        sb.append(String.format("Total: %61d  %,10.2f", getTotalHours(), (float) getTotalCharges())).append("\n");
 
         sb.append(footer);
 

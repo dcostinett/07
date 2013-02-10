@@ -60,7 +60,7 @@ public class InvoiceLineItem {
         Calendar cal = new GregorianCalendar();
         cal.setTime(date);
         sb.append(String.format("%1$tm/%1$td/%1$tY  %2$-29s  %3$-18s  %4$5d  %5$,10.2f",
-                cal, consultant, skill, hours, new Float(getCharge())));
+                cal, consultant, skill.getName(), hours, new Float(getCharge())));
 
         return sb.toString();
     }
