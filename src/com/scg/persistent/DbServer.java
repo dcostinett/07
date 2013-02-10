@@ -2,12 +2,13 @@ package com.scg.persistent;
 
 import com.scg.domain.*;
 import com.scg.util.Address;
+import com.scg.util.DateRange;
 import com.scg.util.Name;
 import com.scg.util.StateCode;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.Date;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -216,7 +217,9 @@ public class DbServer {
             conn = DriverManager.getConnection(url, username, password);
             stmt = conn.createStatement();
 
-            ResultSet rs = stmt.executeQuery("SELECT * FROM clients c");
+            ResultSet rs = stmt.executeQuery("SELECT name, street, city, state, postal_code, " +
+                    "contact_first_name, contact_last_name, contact_middle_name" +
+                    " FROM clients c");
 
             while (rs.next()) {
                 String clientName = rs.getString(1);
@@ -287,9 +290,72 @@ public class DbServer {
      * @param year - the year of the invoice
      * @return the clients invoice for the month
      * @throws SQLException
+     *
+     * SELECT b.date, c.last_name, c.first_name, c.middle_name,
+        b.skill, s.rate, b.hours
+        FROM billable_hours b, consultants c, skills s, timecards t
+        WHERE b.client_id = (SELECT DISTINCT id
+                            FROM clients
+                            WHERE name = 'Acme Industries')
+        AND b.skill = s.name
+        AND b.timecard_id = t.id
+        AND c.id = t.consultant_id
+        AND b.date >= '2005/03/01'
+        AND b.date <= '2005/03/31';
      */
     public Invoice getInvoice(ClientAccount client, int month, int year) throws SQLException {
-        return null;
+        Connection conn = null;
+        Statement stmt = null;
+        Invoice invoice = new Invoice(client, month, year);
+        try {
+            conn = DriverManager.getConnection(url, username, password);
+            stmt = conn.createStatement();
+
+            DateRange dr = new DateRange(month, year);
+
+            PreparedStatement ps = conn.prepareStatement(
+                    "SELECT b.date, c.last_name, c.first_name, c.middle_name, " +
+                            "b.skill, s.rate, b.hours " +
+                            "FROM billable_hours b, consultants c, skills s, timecards t " +
+                            "WHERE b.client_id = (SELECT DISTINCT id " +
+                                    "FROM clients " +
+                                    "WHERE name = ?) " +
+                            "AND b.skill = s.name " +
+                            "AND b.timecard_id = t.id " +
+                            "AND c.id = t.consultant_id " +
+                            "AND b.date >= ? " +
+                            "AND b.date <= ?");
+            ps.setString(1, client.getName());
+            ps.setDate(2, new Date(dr.getStartDate().getTime()));
+            ps.setDate(3, new Date(dr.getEndDate().getTime()));
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Name name = null;
+                if (rs.getString(4) != null && !rs.getString(4).equals("null")) {
+                    name = new Name(rs.getString(2), rs.getString(3), rs.getString(4));
+                }
+                else {
+                    name = new Name(rs.getString(2), rs.getString(3));
+                }
+                Consultant consultant = new Consultant(name);
+                ConsultantTime consultantTime =
+                        new ConsultantTime(new java.util.Date(rs.getDate(1).getTime()),
+                                client, Skill.valueOf(rs.getString(5)), rs.getInt(7));
+                TimeCard tc = new TimeCard(consultant, new java.util.Date());
+                tc.addConsultantTime(consultantTime);
+                invoice.extractLineItems(tc);
+            }
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+
+        return invoice;
     }
 
 

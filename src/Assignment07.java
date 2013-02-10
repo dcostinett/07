@@ -19,12 +19,12 @@ public class Assignment07 {
         try {
             List<ClientAccount> clients = db.getClients();
 
-            for (ClientAccount account : clients) {
-                Invoice invoice = db.getInvoice(account, Calendar.FEBRUARY, 2006);
+            for (ClientAccount client : clients) {
+                Invoice invoice = db.getInvoice(client, Calendar.FEBRUARY, 2006);
                 System.out.println(invoice);
-                invoice = db.getInvoice(account, Calendar.MARCH, 2006);
+                invoice = db.getInvoice(client, Calendar.MARCH, 2006);
                 System.out.println(invoice);
-                invoice = db.getInvoice(account, Calendar.APRIL, 2006);
+                invoice = db.getInvoice(client, Calendar.APRIL, 2006);
                 System.out.println(invoice);
             }
         } catch (SQLException e) {

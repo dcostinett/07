@@ -23,9 +23,9 @@ public class InitDb {
      */
     public static void main(String[] args) throws Exception {
         // Create lists to be populated by factory
-        List<ClientAccount> accounts = new ArrayList();
-        List<Consultant> consultants = new ArrayList();
-        List<TimeCard> timeCards = new ArrayList();
+        List<ClientAccount> accounts = new ArrayList<ClientAccount>();
+        List<Consultant> consultants = new ArrayList<Consultant>();
+        List<TimeCard> timeCards = new ArrayList<TimeCard>();
         ListFactory.populateLists(accounts, consultants, timeCards);
 
         DbServer db = new DbServer("jdbc:mysql://localhost/scgDB", "student", "student");

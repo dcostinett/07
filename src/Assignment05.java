@@ -87,6 +87,7 @@ public final class Assignment05 {
         List<Consultant> consultants = new ArrayList<Consultant>();
         List<TimeCard> timeCards = new ArrayList<TimeCard>();
         ListFactory.populateLists(accounts, consultants, timeCards);
+
         // Print them
         ListFactory.printTimeCards(timeCards, System.out);
 

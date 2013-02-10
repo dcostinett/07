@@ -42,7 +42,7 @@ public class Name implements Serializable {
      */
     public Name(String lastName, String firstName, String middleName) {
         this.firstName = firstName;
-        this.middleName = middleName;
+        this.middleName = middleName == null ? "" : middleName;
         this.lastName = lastName;
     }
 
