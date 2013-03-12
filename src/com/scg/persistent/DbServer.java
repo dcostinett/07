@@ -15,6 +15,8 @@ import java.util.*;
  * User: dcostinett
  * Date: 2/9/13
  * Time: 11:24 AM
+ *
+ * Russ made all of the queries PreparedStatements.
  */
 public class DbServer {
     /** connection string to the SQL DB */
@@ -37,6 +39,8 @@ public class DbServer {
      * Add a client to the database.
      * @param client - the client to add
      * @throws SQLException
+     *
+     * A production app would never create a new connection for each call.
      *
      */
     public void addClient(ClientAccount client) throws SQLException {
@@ -86,6 +90,7 @@ public class DbServer {
                     consultant.getName().getFirstName(),
                     consultant.getName().getMiddleName());
             stmt.executeUpdate(sql);
+            // should check that the return from executeUpdate returns the expected value.
         } finally {
             if (stmt != null) {
                 stmt.close();
@@ -221,6 +226,7 @@ public class DbServer {
                     "contact_first_name, contact_last_name, contact_middle_name" +
                     " FROM clients c");
 
+            // remember to consider making var final.
             while (rs.next()) {
                 String clientName = rs.getString(1);
                 String street = rs.getString(2);

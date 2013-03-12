@@ -23,6 +23,8 @@ public class InitDb {
      */
     public static void main(String[] args) throws Exception {
         // Create lists to be populated by factory
+
+        // remember to consider final qualifier for local vars
         List<ClientAccount> accounts = new ArrayList<ClientAccount>();
         List<Consultant> consultants = new ArrayList<Consultant>();
         List<TimeCard> timeCards = new ArrayList<TimeCard>();
